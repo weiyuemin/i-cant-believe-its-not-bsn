@@ -77,7 +77,7 @@ fn visible_if(condition: bool) -> Visibility {
 
 // A global observer which responds to button clicks.
 fn observe_buttons(
-    mut trigger: Trigger<Pointer<Up>>,
+    mut trigger: Trigger<Pointer<Released>>,
     buttons: Query<&Button>,
     sheep: Query<Entity, With<Sheep>>,
     mut commands: Commands,
@@ -88,7 +88,7 @@ fn observe_buttons(
         }
         Some(Button::Decrement) => {
             if let Some(sheep) = sheep.iter().next() {
-                commands.entity(sheep).despawn_recursive();
+                commands.entity(sheep).despawn();
             }
         }
         _ => {}

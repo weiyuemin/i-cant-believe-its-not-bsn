@@ -1,7 +1,14 @@
-use std::collections::{HashMap, HashSet};
+use alloc::{
+    boxed::Box,
+    string::{String, ToString},
+    vec::Vec,
+};
 
 use bevy_ecs::{component::ComponentId, prelude::*};
-use bevy_hierarchy::prelude::*;
+use bevy_platform_support::{
+    collections::{HashMap, HashSet},
+    hash::FixedHasher,
+};
 
 /// A template is an ordered collection of heterogenous prototypes, which can be
 /// inserted into the world. Returned by the [`template`] macro.
@@ -74,7 +81,7 @@ pub trait CommandsTemplateExt {
     fn build(&mut self, template: Template);
 }
 
-impl<'w, 's> CommandsTemplateExt for Commands<'w, 's> {
+impl CommandsTemplateExt for Commands<'_, '_> {
     fn build(&mut self, template: Template) {
         self.queue(BuildTemplateCommand(template));
     }
@@ -158,7 +165,7 @@ impl<B: Bundle> Prototype for Fragment<B> {
 
     fn build(self: Box<Self>, world: &mut World, receipt: &mut Receipt) {
         // Collect the set of components in the bundle
-        let mut components = HashSet::new();
+        let mut components = HashSet::default();
         B::get_component_ids(world.components(), &mut |maybe_id| {
             if let Some(id) = maybe_id {
                 components.insert(id);
@@ -184,7 +191,7 @@ impl<B: Bundle> Prototype for Fragment<B> {
         // Build the children
         let num_children = self.children.len();
         let mut children = Vec::with_capacity(num_children);
-        let mut child_receipts = HashMap::with_capacity(num_children);
+        let mut child_receipts = HashMap::with_capacity_and_hasher(num_children, FixedHasher);
         let mut i = 0;
         for child in self.children {
             // Compute the anchor for this child, using it's name if supplied or an auto-incrementing
@@ -209,13 +216,26 @@ impl<B: Bundle> Prototype for Fragment<B> {
             child_receipts.insert(child_anchor, child_receipt);
         }
 
+        // Remove any existing children
+        let old_children = world
+            .entity(entity_id)
+            .get::<Children>()
+            .into_iter()
+            .flatten()
+            .copied()
+            .collect::<Vec<_>>();
+
+        for child in old_children {
+            world.entity_mut(child).remove::<ChildOf>();
+        }
+
         // Position the children beneith the entity
-        world.entity_mut(entity_id).replace_children(&children);
+        world.entity_mut(entity_id).add_children(&children);
 
         // Clear any remaining orphans
         for receipt in receipt.children.values() {
             if let Some(entity) = receipt.target {
-                world.entity_mut(entity).despawn_recursive();
+                world.entity_mut(entity).despawn();
             }
         }
 
@@ -232,7 +252,7 @@ impl<B: Bundle> IntoIterator for Fragment<B> {
     type IntoIter = core::iter::Once<Self::Item>;
 
     fn into_iter(self) -> Self::IntoIter {
-        std::iter::once(Box::new(self) as Box<_>)
+        core::iter::once(Box::new(self) as Box<_>)
     }
 }
 

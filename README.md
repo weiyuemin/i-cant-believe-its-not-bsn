@@ -25,3 +25,13 @@ The macro returns portable `Template` values, which can be spliced into other te
 
 Not only is the macro declarative and composable, it also supports basic incrementalization (doing partial updates to the ecs rather than rebuilding from scratch).
 Building the same macro multiple times with `commands.build(template)` does only the work necessary to bring the ecs into alignment with the template.
+
+## Bevy Version
+
+Different versions of this crate support different versions of Bevy Engine:
+
+| Crate Version | Bevy Version |
+| ------------- | ------------ |
+| 0.1           | 0.14         |
+| 0.2, 0.3      | 0.15         |
+| 0.4           | 0.16.1       |

@@ -36,7 +36,7 @@ use bevy_ecs::{
 ///             maybe_a: Maybe::new(A),
 ///         })
 ///         .id()
-/// });
+/// }).unwrap();
 /// let entity_ref = world.get_entity(entity_with_component).unwrap();
 /// assert!(entity_ref.contains::<A>());
 /// assert!(!entity_ref.contains::<Maybe<A>>());
@@ -47,7 +47,7 @@ use bevy_ecs::{
 ///             maybe_a: Maybe::NONE,
 ///         })
 ///         .id()
-/// });
+/// }).unwrap();
 /// let entity_ref = world.get_entity(entity_without_component).unwrap();
 /// assert!(!entity_ref.contains::<A>());
 /// assert!(!entity_ref.contains::<Maybe<A>>());

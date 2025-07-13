@@ -1,19 +1,21 @@
 [package]
 name = "i-cant-believe-its-not-bsn"
 authors = ["Alice I. Cecile"]
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 repository = "https://github.com/Leafwing-Studios/i-cant-believe-its-not-bsn"
 license = "MIT OR Apache-2.0"
 description = "Tools for spawning entity hierarchies in Bevy"
-tags = ["bevy", "ecs"]
+keywords = ["bevy", "ecs"]
 
 [dependencies]
-bevy_ecs = { version = "0.16.0-rc.1", default-features = false }
-bevy_platform_support = { version = "0.16.0-rc.1", default-features = false, features = ["alloc"] }
+bevy_ecs = { version = "0.16.1", default-features = false }
+bevy_platform_support = { version = "0.16.0-rc.4", default-features = false, features = [
+    "alloc",
+] }
 
 [dev-dependencies]
-bevy = { version = "0.16.0-rc.1" }
+bevy = { version = "0.16.1" }
 
 [lints.clippy]
 alloc_instead_of_core = "warn"

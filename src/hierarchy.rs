@@ -1,7 +1,8 @@
 use core::marker::PhantomData;
 
 use bevy_ecs::{
-    component::{ComponentHooks, HookContext, Immutable, StorageType},
+    lifecycle::{ComponentHooks, HookContext},
+    component::{Immutable, StorageType},
     prelude::*,
     system::Command,
     world::DeferredWorld,
@@ -43,10 +44,6 @@ impl<B: Bundle> Component for WithChild<B> {
 
     /// This is a sparse set component as it's only ever added and removed, never iterated over.
     const STORAGE_TYPE: StorageType = StorageType::SparseSet;
-
-    fn register_component_hooks(hooks: &mut ComponentHooks) {
-        hooks.on_add(with_child_hook::<B>);
-    }
 }
 
 /// A hook that runs whenever [`WithChild`] is added to an entity.
@@ -149,10 +146,6 @@ impl<B: Bundle, I: IntoIterator<Item = B> + Send + Sync + 'static> Component
 
     /// This is a sparse set component as it's only ever added and removed, never iterated over.
     const STORAGE_TYPE: StorageType = StorageType::SparseSet;
-
-    fn register_component_hooks(hooks: &mut ComponentHooks) {
-        hooks.on_add(with_children_hook::<B, I>);
-    }
 }
 
 /// A hook that runs whenever [`WithChildren`] is added to an entity.

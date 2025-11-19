@@ -77,12 +77,12 @@ fn visible_if(condition: bool) -> Visibility {
 
 // A global observer which responds to button clicks.
 fn observe_buttons(
-    mut trigger: Trigger<Pointer<Released>>,
+    mut trigger: On<Pointer<Release>>,
     buttons: Query<&Button>,
     sheep: Query<Entity, With<Sheep>>,
     mut commands: Commands,
 ) {
-    match buttons.get(trigger.target).ok() {
+    match buttons.get(trigger.entity).ok() {
         Some(Button::Increment) => {
             commands.spawn(Sheep);
         }

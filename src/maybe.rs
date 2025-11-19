@@ -1,7 +1,8 @@
 use core::marker::PhantomData;
 
 use bevy_ecs::{
-    component::{ComponentHooks, HookContext, Immutable, StorageType},
+    lifecycle::{ComponentHooks, HookContext},
+    component::{Immutable, StorageType},
     prelude::*,
     system::Command,
     world::DeferredWorld,
@@ -60,10 +61,6 @@ impl<B: Bundle> Component for Maybe<B> {
 
     /// This is a sparse set component as it's only ever added and removed, never iterated over.
     const STORAGE_TYPE: StorageType = StorageType::SparseSet;
-
-    fn register_component_hooks(hooks: &mut ComponentHooks) {
-        hooks.on_add(maybe_hook::<B>);
-    }
 }
 
 impl<B: Bundle> Maybe<B> {

@@ -9,13 +9,13 @@ description = "Tools for spawning entity hierarchies in Bevy"
 keywords = ["bevy", "ecs"]
 
 [dependencies]
-bevy_ecs = { version = "0.17.3", default-features = false }
+bevy_ecs = { version = "0.18.0", default-features = false }
 bevy_platform_support = { version = "0.16.0-rc.4", default-features = false, features = [
     "alloc",
 ] }
 
 [dev-dependencies]
-bevy = { version = "0.17.3" }
+bevy = { version = "0.18.0" }
 
 [lints.clippy]
 alloc_instead_of_core = "warn"

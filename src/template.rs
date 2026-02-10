@@ -165,12 +165,9 @@ impl<B: Bundle> Prototype for Fragment<B> {
 
     fn build(self: Box<Self>, world: &mut World, receipt: &mut Receipt) {
         // Collect the set of components in the bundle
-        let mut components = HashSet::default();
-        B::get_component_ids(world.components(), &mut |maybe_id| {
-            if let Some(id) = maybe_id {
-                components.insert(id);
-            }
-        });
+        let components: HashSet<_> = B::get_component_ids(world.components())
+            .flatten()
+            .collect();
 
         // Get or spawn the entity
         let mut entity = match receipt.target.and_then(|e| world.get_entity_mut(e).ok()) {

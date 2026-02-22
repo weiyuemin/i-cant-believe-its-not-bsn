@@ -229,10 +229,12 @@ impl<B: Bundle> Prototype for Fragment<B> {
         // Position the children beneith the entity
         world.entity_mut(entity_id).add_children(&children);
 
-        // Clear any remaining orphans
+        // Clear any remaining orphans (use get_entity_mut to handle already-despawned entities gracefully)
         for receipt in receipt.children.values() {
             if let Some(entity) = receipt.target {
-                world.entity_mut(entity).despawn();
+                if let Ok(entity_mut) = world.get_entity_mut(entity) {
+                    entity_mut.despawn();
+                }
             }
         }
 

@@ -5,7 +5,7 @@ use alloc::{
 };
 
 use bevy_ecs::{component::ComponentId, prelude::*};
-use bevy_platform_support::{
+use bevy_platform::{
     collections::{HashMap, HashSet},
     hash::FixedHasher,
 };
@@ -71,6 +71,8 @@ impl WorldTemplateExt for World {
 pub struct BuildTemplateCommand(Template);
 
 impl Command for BuildTemplateCommand {
+    type Out = ();
+
     fn apply(self, world: &mut World) {
         self.0.build(world)
     }
